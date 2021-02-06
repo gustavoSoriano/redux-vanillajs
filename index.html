@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+
+    <body>
+        <h1 id="counter-state"></h1>
+        <button id="increment-action">+ Increase +</button>
+        <button id="decrement-action">- Decrease -</button>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.min.js"></script>
+        <script src="./WrapperRedux.js"></script>
+        <script>
+            document.addEventListener("DOMContentLoaded", event => {
+                const store = new WrapperRedux({
+                    contador:0
+                })
+                store.Debugger()
+
+                store.RegisterReducer('INCREMENT', (state, action) => ({...state, contador: ++state.contador }) )
+                store.RegisterReducer('DECREMENT', (state, action) => ({...state, contador: --state.contador }) )
+
+                getById('increment-action').addEventListener('click', () => store.Dispatch({type: 'INCREMENT'}) )
+                getById('decrement-action').addEventListener('click', () => store.Dispatch({type: 'DECREMENT'}) )
+
+                store.Subscribe( store => {
+                    console.log("Opa !! fiquei sabendo que o state mudou")
+                    getById('counter-state').innerHTML = store.getState().contador
+                })
+            })
+        </script>
+    </body>
+</html>
